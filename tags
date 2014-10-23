@@ -305,6 +305,7 @@ SYS_exit	syscall.h	3;"	d
 SYS_fork	syscall.h	2;"	d
 SYS_fstat	syscall.h	9;"	d
 SYS_getpid	syscall.h	12;"	d
+SYS_halt	syscall.h	23;"	d
 SYS_kill	syscall.h	7;"	d
 SYS_link	syscall.h	20;"	d
 SYS_mkdir	syscall.h	21;"	d
@@ -2752,6 +2753,7 @@ main	cat.c	/^main(int argc, char *argv[])$/;"	f
 main	echo.c	/^main(int argc, char *argv[])$/;"	f
 main	forktest.c	/^main(void)$/;"	f
 main	grep.c	/^main(int argc, char *argv[])$/;"	f
+main	halt.c	/^main(int argc, char *argv[])$/;"	f
 main	init.c	/^main(void)$/;"	f
 main	kill.c	/^main(int argc, char **argv)$/;"	f
 main	ln.c	/^main(int argc, char *argv[])$/;"	f
@@ -3459,6 +3461,7 @@ sys_exit	sysproc.c	/^sys_exit(void)$/;"	f
 sys_fork	sysproc.c	/^sys_fork(void)$/;"	f
 sys_fstat	sysfile.c	/^sys_fstat(void)$/;"	f
 sys_getpid	sysproc.c	/^sys_getpid(void)$/;"	f
+sys_halt	sysproc.c	/^sys_halt(void)$/;"	f
 sys_kill	sysproc.c	/^sys_kill(void)$/;"	f
 sys_link	sysfile.c	/^sys_link(void)$/;"	f
 sys_mkdir	sysfile.c	/^sys_mkdir(void)$/;"	f

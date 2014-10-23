@@ -98,6 +98,7 @@ extern int sys_unlink(void);
 extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
+extern int sys_halt(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -121,8 +122,10 @@ static int (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+[SYS_halt]    sys_halt,
 };
 
+#ifdef DEBUG_SYSCALL
 static char *syscall_names[] = {
 [SYS_fork]    "fork",
 [SYS_exit]    "exit",
@@ -145,7 +148,9 @@ static char *syscall_names[] = {
 [SYS_link]    "link",
 [SYS_mkdir]   "mkdir",
 [SYS_close]   "close",
+[SYS_halt]    "halt",
 };
+#endif
 
 void
 syscall(void)
@@ -155,7 +160,9 @@ syscall(void)
   num = proc->tf->eax;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     proc->tf->eax = syscalls[num]();
+#ifdef DEBUG_SYSCALL
 	cprintf("%s -> %d\n", syscall_names[num], proc->tf->eax);
+#endif
   } else {
     cprintf("%d %s: unknown sys call %d\n",
             proc->pid, proc->name, num);

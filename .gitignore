@@ -15,4 +15,4 @@ kernelmemfs
 mkfs
 .gdbinit
 .gitignore
-.swp
+*.swp

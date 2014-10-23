@@ -89,3 +89,17 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+int
+sys_halt(void)
+{
+  char *p = "Shutdown";
+
+  // This is a special power-off sequence supported by Bochs and QEMU,
+  // but not by physical hardware. */
+  for( ; *p; p++) {
+    outb(0x8900, *p);
+  }
+  return 0;
+}
+

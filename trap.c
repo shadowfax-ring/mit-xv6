@@ -14,6 +14,9 @@ extern uint vectors[];  // in vectors.S: array of 256 entry pointers
 struct spinlock tickslock;
 uint ticks;
 
+int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
+int lazyalloc(uint addr);
+
 void
 tvinit(void)
 {
@@ -77,6 +80,11 @@ trap(struct trapframe *tf)
             cpu->id, tf->cs, tf->eip);
     lapiceoi();
     break;
+  case T_PGFLT:
+	if (lazyalloc(rcr2()) < 0) {
+		proc->killed = 1;
+	}
+	break;
    
   //PAGEBREAK: 13
   default:
@@ -109,3 +117,21 @@ trap(struct trapframe *tf)
   if(proc && proc->killed && (tf->cs&3) == DPL_USER)
     exit();
 }
+
+int lazyalloc(uint addr)
+{
+    cprintf("Enter Page Fault!\n");
+    uint a = PGROUNDDOWN(addr);
+    char *mem = kalloc();
+	if (mem == 0) {
+      cprintf("lazyalloc: kalloc out of memory\n");
+	  return -1;
+	}
+	memset(mem, 0, PGSIZE);
+	if (mappages(proc->pgdir, (char*)a, PGSIZE, v2p(mem), PTE_W|PTE_U) != 0) {
+		cprintf("lazyalloc: manpages error\n");
+		return -1;
+	}
+	return 0;
+}
+

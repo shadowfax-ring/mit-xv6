@@ -7,6 +7,8 @@
 #include "mmu.h"
 #include "proc.h"
 
+#define DEFAULT_PAGE_ALLOC
+
 int
 sys_fork(void)
 {
@@ -51,11 +53,13 @@ sys_sbrk(void)
   if(argint(0, &n) < 0)
     return -1;
   addr = proc->sz;
-  //if(growproc(n) < 0)
-    //return -1;
+#ifdef DEFAULT_PAGE_ALLOC
+  if(growproc(n) < 0)
+    return -1;
+#endif
   proc->sz += n;
   switchuvm(proc);
-  cprintf("sbrk: extend size: %d\n", n);
+  //cprintf("sbrk: extend size: %d\n", n);
   return addr;
 }
 
@@ -104,5 +108,20 @@ sys_halt(void)
     outb(0x8900, *p);
   }
   return 0;
+}
+
+int
+sys_alarm(void)
+{
+   int ticks;
+   void (*handler)();
+
+   if(argint(0, &ticks) < 0)
+     return -1;
+   if(argptr(1, (char**)&handler, 1) < 0)
+     return -1;
+   proc->alarmticks = ticks;
+   proc->alarmhandler = handler;
+   return 0;
 }
 

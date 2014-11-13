@@ -15,7 +15,9 @@ struct spinlock tickslock;
 uint ticks;
 
 int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
+#ifdef LAZY_PAGE_ALLOC
 int lazyalloc(uint addr);
+#endif
 
 void
 tvinit(void)
@@ -80,12 +82,13 @@ trap(struct trapframe *tf)
             cpu->id, tf->cs, tf->eip);
     lapiceoi();
     break;
+#ifdef LAZY_PAGE_ALLOC
   case T_PGFLT:
 	if (lazyalloc(rcr2()) < 0) {
 		proc->killed = 1;
 	}
 	break;
-   
+#endif 
   //PAGEBREAK: 13
   default:
     if(proc == 0 || (tf->cs&3) == 0){
@@ -118,6 +121,7 @@ trap(struct trapframe *tf)
     exit();
 }
 
+#ifdef LAZY_PAGE_ALLOC
 int lazyalloc(uint addr)
 {
     cprintf("Enter Page Fault!\n");
@@ -134,4 +138,5 @@ int lazyalloc(uint addr)
 	}
 	return 0;
 }
+#endif
 

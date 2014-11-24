@@ -8,7 +8,7 @@ int
 main(int argc, char *argv[])
 {
   int i;
-  printf(1, "alarmtest starting\n");
+
   alarm(10, (void *)periodic);
   for(i = 0; i < 50*500000; i++){
     if((i++ % 500000) == 0)

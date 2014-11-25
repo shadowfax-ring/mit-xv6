@@ -60,14 +60,15 @@ trap(struct trapframe *tf)
       release(&tickslock);
     }
 	// when timer interrupt comes from userspace
-	if(proc && (tf->cs & 3) == 3) {
+	if(proc && (tf->cs & 3) == 3 && !proc->alarmhandlerfired) {
 		proc->accumticks++;
 		if (proc->accumticks == proc->alarmticks) {
 			proc->accumticks = 0;
 			tf->esp -= 4;
 			*((uint *)(tf->esp)) = tf->eip;
 			tf->eip = (uint) proc->alarmhandler;
-			//proc->tf = tf;
+			/* avoid re-entrant calls to alarm handler */
+			//proc->alarmhandlerfired = 1;
 		}
 	}
     lapiceoi();

@@ -7,6 +7,7 @@
 #include "x86.h"
 #include "syscall.h"
 
+
 // User code makes a system call with INT T_SYSCALL.
 // System call number in %eax.
 // Arguments on the stack, from the user call to the C
@@ -165,6 +166,13 @@ syscall(void)
     proc->tf->eax = syscalls[num]();
 #ifdef DEBUG_SYSCALL
 	cprintf("%s -> %d\n", syscall_names[num], proc->tf->eax);
+//    int i = 0;
+//    char *p;
+//	while (argstr(i, &p) >= 0) {
+//		cprintf("arg%d: %s  ", i, p);
+//		i++;
+//	}
+//	cprintf("\n");
 #endif
   } else {
     cprintf("%d %s: unknown sys call %d\n",

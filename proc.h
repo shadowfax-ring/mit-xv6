@@ -69,6 +69,7 @@ struct proc {
   int alarmticks;			   // ticks per period 
   int accumticks;			   // ticks used
   void (*alarmhandler)();	   // alarm handler callback
+  int alarmhandlerfired;	   // alarm handler on/off
 };
 
 // Process memory is laid out contiguously, low addresses first:

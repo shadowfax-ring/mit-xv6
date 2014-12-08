@@ -68,7 +68,7 @@ trap(struct trapframe *tf)
 			*((uint *)(tf->esp)) = tf->eip;
 			tf->eip = (uint) proc->alarmhandler;
 			/* avoid re-entrant calls to alarm handler */
-			//proc->alarmhandlerfired = 1;
+			proc->alarmhandlerfired = 1;
 		}
 	}
     lapiceoi();

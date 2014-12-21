@@ -64,9 +64,13 @@ trap(struct trapframe *tf)
 		proc->accumticks++;
 		if (proc->accumticks == proc->alarmticks) {
 			proc->accumticks = 0;
+			// following three lines can be interpreted as follows
+			// 1) push tf->eip (instruction after finishing the callback)
+			// 2) move proc->alarmhandler, eip (reposition next instruction)
 			tf->esp -= 4;
 			*((uint *)(tf->esp)) = tf->eip;
 			tf->eip = (uint) proc->alarmhandler;
+
 			/* avoid re-entrant calls to alarm handler */
 			proc->alarmhandlerfired = 1;
 		}

@@ -25,6 +25,7 @@ int sleep(int);
 int uptime(void);
 int halt(void);
 int alarm(int ticks, void (*handler)());
+int restore_caller_saved_regs();
 
 // ulib.c
 int stat(char*, struct stat*);

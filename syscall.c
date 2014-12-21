@@ -101,6 +101,7 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_halt(void);
 extern int sys_alarm(void);
+extern int sys_restore_caller_saved_regs(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -126,6 +127,7 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_halt]    sys_halt,
 [SYS_alarm]	  sys_alarm,
+[SYS_restore_caller_saved_regs] sys_restore_caller_saved_regs,
 };
 
 #ifdef DEBUG_SYSCALL
@@ -153,6 +155,7 @@ static char *syscall_names[] = {
 [SYS_close]   "close",
 [SYS_halt]    "halt",
 [SYS_alarm]	  "alarm",
+[SYS_restore_caller_saved_regs] "restore_caller_saved_regs",
 };
 #endif
 

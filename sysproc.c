@@ -127,3 +127,11 @@ sys_alarm(void)
    return 0;
 }
 
+int sys_restore_caller_saved_regs(void)
+{
+	struct trapframe *tf = proc->tf;
+	tf = 0;
+
+	return 0;
+}
+

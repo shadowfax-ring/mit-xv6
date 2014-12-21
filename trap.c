@@ -67,8 +67,24 @@ trap(struct trapframe *tf)
 			// following three lines can be interpreted as follows
 			// 1) push tf->eip (instruction after finishing the callback)
 			// 2) move proc->alarmhandler, eip (reposition next instruction)
-			tf->esp -= 4;
-			*((uint *)(tf->esp)) = tf->eip;
+			*((uint *)(tf->esp - 4)) = tf->eip;
+			*((uint *)(tf->esp - 8)) = tf->eax;
+			*((uint *)(tf->esp - 12)) = tf->ecx;
+			*((uint *)(tf->esp - 16)) = tf->edx;
+
+			// Add instructions in the stack after handler returns
+			// movl $SYS_restore_caller_saved_reg, %eax
+			// int $T_SYSCALL
+			// ret (can be omitted)
+			*((uint *)(tf->esp - 20)) = 0xc340cd00;
+			*((uint *)(tf->esp - 24)) = 0x000018b8;
+
+			// set return address of the alarm handler
+			*((uint *)(tf->esp - 28)) = tf->esp - 24;
+			tf->esp -= 28;
+#ifdef DEBUG_TRAPFRAME
+			cprintf("old ESP = %x\n", tf->esp);
+#endif
 			tf->eip = (uint) proc->alarmhandler;
 
 			/* avoid re-entrant calls to alarm handler */

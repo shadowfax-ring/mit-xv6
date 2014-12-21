@@ -130,7 +130,29 @@ sys_alarm(void)
 int sys_restore_caller_saved_regs(void)
 {
 	struct trapframe *tf = proc->tf;
-	tf = 0;
+#ifdef DEBUG_TRAPFRAME
+	cprintf("new ESP = %x\n", tf->esp);
+#endif
+
+	// Locate the position of $esp to the saved registers on kernel stack
+	// Since this is another trapframe, it's different from the initial
+	// trapframe for the timer. The esp has already poped after the timer
+	// callback, so the offest is not 12.
+	tf->esp += 8;
+
+	tf->edx = *(uint *)(tf->esp);	
+	tf->esp += 4;
+
+	tf->ecx = *(uint *)(tf->esp);	
+	tf->esp += 4;
+
+	tf->eax = *(uint *)(tf->esp);	
+	tf->esp += 4;
+
+	tf->eip = *(uint *)(tf->esp);
+	tf->esp += 4;
+
+	proc->alarmhandlerfired = 0;
 
 	return 0;
 }

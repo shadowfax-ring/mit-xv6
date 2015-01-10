@@ -8,6 +8,8 @@
 #include "fs.h"
 #include "file.h"
 #include "spinlock.h"
+// For exercise 7 - locks
+#include "x86.h"
 
 struct devsw devsw[NDEV];
 struct {
@@ -28,13 +30,19 @@ filealloc(void)
   struct file *f;
 
   acquire(&ftable.lock);
+  // For exercise 7 - lock
+  sti();
   for(f = ftable.file; f < ftable.file + NFILE; f++){
     if(f->ref == 0){
       f->ref = 1;
+      // For exercise 7 - lock
+      cli();
       release(&ftable.lock);
       return f;
     }
   }
+  // For exercise 7 - lock
+  cli();
   release(&ftable.lock);
   return 0;
 }

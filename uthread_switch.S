@@ -6,17 +6,13 @@
  */
 	.globl thread_switch
 thread_switch:
-	/* YOUR CODE HERE */
-/*	push %ebp */
-/*	movl %esp, %ebp */
-
 	pushal
 
-/* Save the state of current thread */
+/* Save the state/stack of current thread */
 	movl current_thread, %eax
 	movl %esp, (%eax)
 
-/* Move %esp to next thread */
+/* restore the stack %esp of next thread */
 	movl next_thread, %eax
 	movl (%eax), %esp	
 
@@ -27,7 +23,4 @@ thread_switch:
 	movl $0x0, next_thread
 
 	popal
-
-/*	pop %ebp */
-
 	ret				/* pop return address from stack */

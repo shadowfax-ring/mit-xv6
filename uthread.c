@@ -66,6 +66,7 @@ thread_create(void (*func)())
   thread_p t;
 
   for (t = all_thread; t < all_thread + MAX_THREAD; t++) {
+	printf(1, "find thread: 0x%x\n", (int) t);
     if (t->state == FREE) break;
   }
   t->sp = (int) (t->stack + STACK_SIZE);   // set sp to the top of the stack
@@ -86,9 +87,9 @@ static void
 mythread(void)
 {
   int i;
-  printf(1, "my thread running\n");
+  printf(1, "my thread running: 0x%x\n", (int) current_thread);
   for (i = 0; i < 100; i++) {
-    printf(1, "my thread 0x%x\n", (int) current_thread);
+    printf(1, "my thread 0x%x: %dth\n", (int) current_thread, i);
     thread_yield();
   }
   printf(1, "my thread: exit\n");

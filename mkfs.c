@@ -13,10 +13,23 @@
 
 #define static_assert(a, b) do { switch (0) case 0: case (a): ; } while (0)
 
-int nblocks = (995-LOGSIZE);
+//int nblocks = (995-LOGSIZE);
+//int nlog = LOGSIZE;
+//int ninodes = 200;
+//int size = 1024;
+
+/* Exercise 2012: big files */
+/* assert failed when checking size */
+//int nblocks = 20985;
+//int nlog = LOGSIZE;
+//int ninodes = 200;
+//int size = 21029;
+
+/* Exercise 2014: big files */
+int nblocks = 21049;
 int nlog = LOGSIZE;
 int ninodes = 200;
-int size = 1024;
+int size = 21113;
 
 int fsfd;
 struct superblock sb;
